@@ -12,6 +12,12 @@ public class DoublyNode<T> {
         this.prev = null;
     }
 
+    public DoublyNode(T value, DoublyNode<T> next, DoublyNode<T> prev) {
+        this.value = value;
+        this.next = next;
+        this.prev = prev;
+    }
+
     public T getValue() {
         return value;
     }

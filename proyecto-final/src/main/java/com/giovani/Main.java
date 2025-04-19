@@ -1,18 +1,22 @@
 package com.giovani;
 
 import com.giovani.tad.DoublyLinkedList;
+import com.giovani.tad.StackGeneric;
 
 public class Main {
     public static void main(String[] args) {
-//        FileManager fileManager = new FileManager();
-//        LinkedList<Vehiculo> v = fileManager.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/prueba.csv");
-//        System.out.println(v.toString());
-        DoublyLinkedList<Integer> lista = new DoublyLinkedList<Integer>();
-        for (int i = 0; i < 10; i++) {
-            lista.addLast(i);
+        StackGeneric<Integer> pila = new StackGeneric<>();
+        pila.push(10);
+        pila.push(20);
+        pila.push(30);
+        pila.push(50);
+        final int n = pila.size();
+        try {
+            for (int i = 0; i < n + 2; i++) {
+                System.out.print(pila.pop() + " - ");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        lista.print();
-        System.out.println(" ");
-        lista.printLastToFirst();
     }
 }

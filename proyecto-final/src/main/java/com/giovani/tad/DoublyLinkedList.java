@@ -79,11 +79,40 @@ public class DoublyLinkedList<T> {
         this._size--;
     }
 
+    public T get(int index) throws Exception {
+        if (isEmpty()) throw new Exception("Lista vacia");
+        if (index < 0 || index >= this._size) {
+            throw new Exception("Indice fuera de rango");
+        }
+        if (index == 0) return head.getValue();
+        if (index == this._size - 1) return tail.getValue();
+        if (this._size / 2 > index) {
+            var current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.getNext();
+            }
+            return current.getValue();
+        }
+        var current = tail;
+        for (int i = 0; i < this._size - index - 1; i++) {
+            current = current.getPrev();
+        }
+        return current.getValue();
+    }
+
     public boolean isEmpty() {
         return head == null;
     }
 
     public int size() {
         return this._size;
+    }
+
+    public DoublyNode<T> getHead() {
+        return head;
+    }
+
+    public DoublyNode<T> getTail() {
+        return tail;
     }
 }
