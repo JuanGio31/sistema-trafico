@@ -22,4 +22,9 @@ public class Input {
         System.out.print(message + " > ");
         return scanner.nextLine();
     }
+
+    public static String getEnter(Scanner scanner) {
+        System.out.print("Presiona enter para continuar > ");
+        return scanner.nextLine();
+    }
 }

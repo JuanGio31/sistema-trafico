@@ -1,4 +1,4 @@
-package com.giovani.tad;
+package com.giovani.tad.linear;
 
 public class StackGeneric<T> {
     private int _size;

@@ -1,17 +1,26 @@
 package com.giovani;
 
-import com.giovani.tad.StackGeneric;
-
-import java.util.Scanner;
+import com.giovani.tad.linear.StackGeneric;
+import com.giovani.tad.nonlinear.AVL;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int opt = Input.getNumber(scanner, "Ingrese un numero");
-        System.out.println(opt);
-        String message = Input.getString(scanner, "Ingresar nombre");
-        System.out.println(message);
-        scanner.close();
+//        Traffic traffic = new Traffic();
+//        traffic.init();
+        avlImplementation();
+    }
+
+    private static void avlImplementation() {
+        AVL avl = new AVL();
+        avl.insertar(10);
+        avl.insertar(5);
+        avl.insertar(13);
+        avl.insertar(1);
+        avl.insertar(6);
+        avl.insertar(17);
+        avl.preOrder();
+        avl.inOrder();
+        avl.postOrder();
     }
 
     private static void stackImplementation() {

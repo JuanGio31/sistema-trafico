@@ -1,10 +1,9 @@
 package com.giovani;
 
-import com.giovani.tad.DoublyLinkedList;
+import com.giovani.tad.linear.DoublyLinkedList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
