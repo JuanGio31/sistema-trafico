@@ -30,4 +30,20 @@ public class Vehiculo {
                 ", tiempoEspera=" + tiempoEspera +
                 '}';
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getPlaca() {
+        return Placa;
+    }
+
+    public int getNivelUrgencia() {
+        return nivelUrgencia;
+    }
+
+    public int getTiempoEspera() {
+        return tiempoEspera;
+    }
 }
