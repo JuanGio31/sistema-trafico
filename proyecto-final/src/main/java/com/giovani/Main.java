@@ -2,6 +2,7 @@ package com.giovani;
 
 import com.giovani.tad.linear.StackGeneric;
 import com.giovani.tad.nonlinear.AVL;
+import com.giovani.tad.nonlinear.Ciudad;
 import com.giovani.tad.nonlinear.TablaDispersion;
 
 public class Main {
@@ -10,6 +11,19 @@ public class Main {
 //        traffic.init();
 //        avlImplementation();
         hashImplementation();
+//        testCiudad();
+
+//        int base = 65;
+//        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        for (int i = 0; i < str.length(); i++) {
+//            int number = str.charAt(i) - 65;
+//            System.out.print(number + " ");
+//        }
+    }
+
+    private static void testCiudad() {
+        Ciudad ciudad = new Ciudad();
+        ciudad.print();
     }
 
     private static void hashImplementation() {
@@ -22,9 +36,8 @@ public class Main {
         dispersion.insertar("A123SAT", new Vehiculo("Ambulancia", "A123SAT", 3, 2));
         dispersion.insertar("A123SAQ", new Vehiculo("Particular", "A123SAQ", 3, 2));
         dispersion.insertar("D123SMP", new Vehiculo("Ambulancia", "D123SMP", 3, 2));
-        dispersion.insertar("OO2FSAT", new Vehiculo("Policia", "OO2FSAT", 3, 2));
 
-        System.out.println(dispersion.buscar("A123SAQ").toString());
+        System.out.println(dispersion.buscar("A123SAT").toString());
         System.out.println(dispersion.getSize());
     }
 
