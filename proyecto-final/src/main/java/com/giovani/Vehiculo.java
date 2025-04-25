@@ -1,9 +1,9 @@
 package com.giovani;
 
-public class Vehiculo {
+public class Vehiculo implements Comparable<Vehiculo> {
     private final String tipo;
     private final String Placa;
-    private final int nivelUrgencia;
+    private int nivelUrgencia;
     private final int tiempoEspera;
 
     /**
@@ -45,5 +45,14 @@ public class Vehiculo {
 
     public int getTiempoEspera() {
         return tiempoEspera;
+    }
+
+    @Override
+    public int compareTo(Vehiculo otro) {
+        int urgencia = Integer.compare(this.nivelUrgencia, otro.nivelUrgencia);
+        if (urgencia == 0) {
+            return Integer.compare(this.tiempoEspera, otro.tiempoEspera);
+        }
+        return urgencia;
     }
 }

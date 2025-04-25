@@ -14,6 +14,7 @@ public class Simulacion {
 
     public Simulacion() {
         this.ciudad = new Ciudad(8);
+        this.dispersion = new TablaDispersion();
     }
 
     public void init() {

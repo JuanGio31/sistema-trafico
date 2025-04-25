@@ -1,5 +1,6 @@
 package com.giovani;
 
+import com.giovani.tad.linear.ColaDePrioridad;
 import com.giovani.tad.linear.ListOrdered;
 import com.giovani.tad.linear.StackGeneric;
 import com.giovani.tad.nonlinear.AVL;
@@ -16,18 +17,25 @@ public class Main {
 //        hashImplementation();
 //        testCiudad();
 
-        ListOrdered<Integer> lista = new ListOrdered<>();
-        Random rd = new Random();
-        for (int i = 0; i < 5; i++) {
-            int n = rd.nextInt(20);
-            lista.add(n);
-        }
-        final int n = lista.getSize();
-        for (int i = 0; i < n; i++) {
-            System.out.println(lista.delete().toString());
-        }
+//        int min = 1;
+//        int max = 5;
+//        ColaDePrioridad cola = new ColaDePrioridad();
+//        for (int i = 0; i < 10; i++) {
+//            int numeroAleatorioEntero = (int) (Math.random() * (max - min + 1)) + min;
+//            int valor = (int) (Math.random() * (100 - 10 + 1)) + 10;
+//            System.out.print("[" + numeroAleatorioEntero + "," + valor + "] ");
+//            cola.enqueue(numeroAleatorioEntero, valor);
+//        }
+//        System.out.println(" ");
+//
+//        for (int i = 0; i < 10; i++) {
+//            System.out.print("[ ,");
+//            System.out.print(cola.dequeue().toString());
+//            System.out.print("] ");
+//        }
+//        System.out.println(" ");
 
-/*
+        /*
         int base = 65;
         String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for (int i = 0; i < str.length(); i++) {
@@ -40,7 +48,6 @@ public class Main {
 
     private static void testCiudad() {
         Ciudad ciudad = new Ciudad(10);
-        //ciudad.print();
         ciudad.print();
     }
 

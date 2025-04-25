@@ -1,7 +1,9 @@
 package com.giovani.tad.linear;
 
-public class ListOrdered<T extends Comparable<T>> {
-    NodeGeneric<T> head;
+import com.giovani.Vehiculo;
+
+public class ListOrdered {
+    NodeGeneric<Vehiculo> head;
     int size;
 
     public ListOrdered() {
@@ -13,14 +15,14 @@ public class ListOrdered<T extends Comparable<T>> {
         return size;
     }
 
-    public void add(T valor) {
+    public void add(Vehiculo valor) {
         var nuevo = new NodeGeneric<>(valor);
-        if (isEmpty() || valor.compareTo(head.getValue()) < 0) {
+        if (isEmpty() || valor.compareTo(head.getValue()) > 0) {
             nuevo.setNext(head);
             head = nuevo;
         } else {
             var temp = head;
-            while (temp.getNext() != null && valor.compareTo(temp.getNext().getValue()) > 0) {
+            while (temp.getNext() != null && valor.compareTo(temp.getNext().getValue()) < 0) {
                 temp = temp.getNext();
             }
             nuevo.setNext(temp.getNext());
@@ -29,9 +31,9 @@ public class ListOrdered<T extends Comparable<T>> {
         size++;
     }
 
-    public T delete() throws Exception {
+    public Vehiculo delete() throws Exception {
         if (isEmpty()) throw new Exception("Lista vacia!.");
-        T value = head.getValue();
+        Vehiculo value = head.getValue();
         var temp = head;
         head = temp.getNext();
         this.size--;
