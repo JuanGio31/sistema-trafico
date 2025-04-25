@@ -1,10 +1,10 @@
 package com.giovani.tad.linear;
 
-public class Node<T> {
+public class NodeGeneric<T> {
     private T value;
-    private Node<T> next;
+    private NodeGeneric<T> next;
 
-    public Node(T value) {
+    public NodeGeneric(T value) {
         this.value = value;
         this.next = null;
     }
@@ -17,11 +17,11 @@ public class Node<T> {
         this.value = value;
     }
 
-    public Node<T> getNext() {
+    public NodeGeneric<T> getNext() {
         return next;
     }
 
-    public void setNext(Node<T> next) {
+    public void setNext(NodeGeneric<T> next) {
         this.next = next;
     }
 }

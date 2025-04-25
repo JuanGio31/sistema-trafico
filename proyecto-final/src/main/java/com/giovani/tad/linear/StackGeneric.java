@@ -2,7 +2,7 @@ package com.giovani.tad.linear;
 
 public class StackGeneric<T> {
     private int _size;
-    private Node<T> top;
+    private NodeGeneric<T> top;
 
     public StackGeneric() {
         this._size = 0;
@@ -10,7 +10,7 @@ public class StackGeneric<T> {
     }
 
     public void push(T value) {
-        var node = new Node<>(value);
+        var node = new NodeGeneric<>(value);
         if (top != null) {
             node.setNext(top);
         }

@@ -24,10 +24,10 @@ public class FileManager {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "Error al leer el archivo.", e);
+            logger.log(Level.SEVERE, "Error al leer el archivo.");
+            System.out.println(" ");
             return null;
         }
-
         return vehiculos;
     }
 }

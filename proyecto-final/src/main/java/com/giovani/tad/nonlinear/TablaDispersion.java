@@ -32,18 +32,20 @@ public class TablaDispersion {
         var nuevo = new Nodo(placa, vehiculo);
         if (elementos[indice] == null) {
             elementos[indice] = nuevo;
+            size++;
         } else {
             if (elementos[indice].clave.equals(placa)) {
-                elementos[indice] = nuevo;
+                //elementos[indice] = nuevo;
+                System.out.println("Error, el vehiculo ya existe!");
             } else {
                 var temp = elementos[indice];
                 while (temp.siguiete != null) {
                     temp = temp.siguiete;
                 }
                 temp.siguiete = nuevo;
+                size++;
             }
         }
-        size++;
         if ((double) size / NUMERO_ELEMENTOS > 0.7) {
             rehashing();
         }

@@ -2,6 +2,7 @@ package com.giovani.tad.nonlinear;
 
 public class Interseccion {
     private char simbolo;
+
     private Interseccion arriba, abajo;
 
     public Interseccion(char simbolo) {
