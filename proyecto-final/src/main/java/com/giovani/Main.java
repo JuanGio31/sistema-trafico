@@ -1,54 +1,25 @@
 package com.giovani;
 
-import com.giovani.tad.linear.ColaDePrioridad;
-import com.giovani.tad.linear.ListOrdered;
 import com.giovani.tad.linear.StackGeneric;
 import com.giovani.tad.nonlinear.AVL;
-import com.giovani.tad.nonlinear.Ciudad;
+import com.giovani.tad.nonlinear.Matriz;
 import com.giovani.tad.nonlinear.TablaDispersion;
-
-import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-//        Simulacion traffic = new Simulacion();
-//        traffic.getMenu();
-//        avlImplementation();
-//        hashImplementation();
-//        testCiudad();
-
-//        int min = 1;
-//        int max = 5;
-//        ColaDePrioridad cola = new ColaDePrioridad();
-//        for (int i = 0; i < 10; i++) {
-//            int numeroAleatorioEntero = (int) (Math.random() * (max - min + 1)) + min;
-//            int valor = (int) (Math.random() * (100 - 10 + 1)) + 10;
-//            System.out.print("[" + numeroAleatorioEntero + "," + valor + "] ");
-//            cola.enqueue(numeroAleatorioEntero, valor);
+//        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        for (int i = 0; i < str.length(); i++) {
+//            int number = str.charAt(i) - 65;
+//            System.out.print(number + " ");
 //        }
-//        System.out.println(" ");
-//
-//        for (int i = 0; i < 10; i++) {
-//            System.out.print("[ ,");
-//            System.out.print(cola.dequeue().toString());
-//            System.out.print("] ");
-//        }
-//        System.out.println(" ");
 
-        /*
-        int base = 65;
-        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for (int i = 0; i < str.length(); i++) {
-            int number = str.charAt(i) - 65;
-            System.out.print(number + " ");
-        }
-*/
-
+        Simulacion simulacion = new Simulacion();
+        simulacion.getMenu();
     }
 
-    private static void testCiudad() {
-        Ciudad ciudad = new Ciudad(10);
-        ciudad.print();
+    private static void testMatriz(int fila, int columna) {
+        Matriz matriz = new Matriz(fila, columna);
+        matriz.print();
     }
 
     private static void hashImplementation() {

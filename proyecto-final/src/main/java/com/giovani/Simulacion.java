@@ -1,19 +1,18 @@
 package com.giovani;
 
 import com.giovani.tad.linear.DoublyLinkedList;
-import com.giovani.tad.nonlinear.Ciudad;
 import com.giovani.tad.nonlinear.TablaDispersion;
 
 import java.util.Scanner;
 
 public class Simulacion {
     private final Ciudad ciudad;
-    private TablaDispersion dispersion;
+    private final TablaDispersion dispersion;
     private final Scanner scanner = new Scanner(System.in);
     Object temp;
 
     public Simulacion() {
-        this.ciudad = new Ciudad(8);
+        this.ciudad = new Ciudad(8, 8);
         this.dispersion = new TablaDispersion();
     }
 
@@ -22,7 +21,6 @@ public class Simulacion {
         String input;
         do {
             ciudad.print();
-            ((DoublyLinkedList<?>) temp).print();
             input = Utilidad.getEnter(scanner);
             if (input.length() == 1 && input.charAt(0) == 'q') loop = false;
             //mostrar reportes del simulador
@@ -30,7 +28,7 @@ public class Simulacion {
     }
 
     public void getMenu() {
-        int option = -1;
+        int option;
         do {
             printMenuOp();
             option = Utilidad.getNumber(scanner, "Seleccione una opcion");
