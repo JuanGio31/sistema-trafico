@@ -1,23 +1,26 @@
 package com.giovani.tad.nonlinear;
 
+import com.giovani.Interseccion;
+
 public class NodoAVL {
-    private int dato, fe;
+    private Interseccion dato;
+    private int fe;
     private NodoAVL hijoIzquierdo;
     private NodoAVL hijoDerecho;
 
-    public NodoAVL(int dato) {
-        this.dato = dato;
+    public NodoAVL(Interseccion complejidad) {
+        this.dato = complejidad;
         this.hijoIzquierdo = null;
         this.hijoDerecho = null;
         this.fe = 0;
     }
 
-    public int getDato() {
-        return dato;
+    public int getComplejidad() {
+        return dato.getComplejidad();
     }
 
-    public void setDato(int dato) {
-        this.dato = dato;
+    public void setComplejidad(Interseccion interseccion) {
+        this.dato = interseccion;
     }
 
     public int getFe() {

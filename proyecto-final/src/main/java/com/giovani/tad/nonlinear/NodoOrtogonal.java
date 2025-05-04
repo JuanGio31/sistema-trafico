@@ -25,8 +25,8 @@ public class NodoOrtogonal {
         this.interseccion.setSimbolo(simbolo);
     }
 
-    public NodoOrtogonal getArriba() {
-        return arriba;
+    public Interseccion getInterseccion() {
+        return interseccion;
     }
 
     public void setArriba(NodoOrtogonal arriba) {
@@ -49,11 +49,19 @@ public class NodoOrtogonal {
         this.derecha = derecha;
     }
 
-    public NodoOrtogonal getIzquierda() {
-        return izquierda;
-    }
-
     public void setIzquierda(NodoOrtogonal izquierda) {
         this.izquierda = izquierda;
+    }
+
+    public void setInterseccion(Interseccion interseccion) {
+        this.interseccion = interseccion;
+    }
+
+    public NodoOrtogonal getArriba() {
+        return arriba;
+    }
+
+    public NodoOrtogonal getIzquierda() {
+        return izquierda;
     }
 }

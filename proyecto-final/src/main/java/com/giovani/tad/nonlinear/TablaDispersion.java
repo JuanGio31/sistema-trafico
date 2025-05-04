@@ -3,7 +3,7 @@ package com.giovani.tad.nonlinear;
 import com.giovani.Vehiculo;
 
 public class TablaDispersion {
-    private static final int NUMERO_ELEMENTOS = 15;
+    private static int NUMERO_ELEMENTOS = 15;
     private Nodo[] elementos;
     int size;
 
@@ -14,15 +14,18 @@ public class TablaDispersion {
 
     public Vehiculo buscar(String placa) {
         int indice = getHashCode(placa);
-        if (elementos[indice].siguiete == null) {
-            return elementos[indice].valor;
+        if (elementos[indice] == null) {
+            return null;
         }
-        var temp = elementos[indice];
+//        if (elementos[indice].siguiente == null) {
+//            return elementos[indice].valor;
+//        }
+        Nodo temp = elementos[indice];
         while (temp != null) {
             if (temp.clave.equals(placa)) {
                 return temp.valor;
             }
-            temp = temp.siguiete;
+            temp = temp.siguiente;
         }
         return null;
     }
@@ -30,22 +33,21 @@ public class TablaDispersion {
     public void insertar(String placa, Vehiculo vehiculo) {
         int indice = getHashCode(placa);
         var nuevo = new Nodo(placa, vehiculo);
-        if (elementos[indice] == null) {
-            elementos[indice] = nuevo;
-            size++;
-        } else {
-            if (elementos[indice].clave.equals(placa)) {
-                //elementos[indice] = nuevo;
-                System.out.println("Error, el vehiculo ya existe!");
-            } else {
-                var temp = elementos[indice];
-                while (temp.siguiete != null) {
-                    temp = temp.siguiete;
+
+        if (elementos[indice] != null) {
+            var temp = elementos[indice];
+            while (temp != null) {
+                if (temp.clave.equals(placa)) {
+                    System.out.println("Error, el vehículo ya existe!");
+                    return;
                 }
-                temp.siguiete = nuevo;
-                size++;
+                temp = temp.siguiente;
             }
+            nuevo.siguiente = elementos[indice];
         }
+        elementos[indice] = nuevo;
+        size++;
+
         if ((double) size / NUMERO_ELEMENTOS > 0.7) {
             rehashing();
         }
@@ -65,13 +67,32 @@ public class TablaDispersion {
 
     private void rehashing() {
         size = 0;
-        var anterior = elementos;
-        elementos = new Nodo[anterior.length * 2];
+        Nodo[] anterior = elementos;
+        NUMERO_ELEMENTOS = anterior.length * 2;
+        elementos = new Nodo[NUMERO_ELEMENTOS];
         for (Nodo elemento : anterior) {
-            if (elemento == null) {
-                continue;
+            Nodo actual = elemento;
+            while (actual != null) {
+                insertar(actual.clave, actual.valor);
+                actual = actual.siguiente;
             }
-            insertar(elemento.clave, elemento.valor);
+        }
+    }
+
+    public void mostrarEstructura() {
+        System.out.println("\nEstructura de la Tabla de Dispersión:");
+        for (int i = 0; i < elementos.length; i++) {
+            System.out.print("Índice " + i + ": ");
+            if (elementos[i] == null) {
+                System.out.println("vacío");
+            } else {
+                Nodo actual = elementos[i];
+                while (actual != null) {
+                    System.out.print("[" + actual.clave + "] -> ");
+                    actual = actual.siguiente;
+                }
+                System.out.println("null");
+            }
         }
     }
 
@@ -82,12 +103,12 @@ public class TablaDispersion {
     private static class Nodo {
         String clave;
         Vehiculo valor;
-        Nodo siguiete;
+        Nodo siguiente;
 
         public Nodo(String clave, Vehiculo valor) {
             this.clave = clave;
             this.valor = valor;
-            this.siguiete = null;
+            this.siguiente = null;
         }
     }
 

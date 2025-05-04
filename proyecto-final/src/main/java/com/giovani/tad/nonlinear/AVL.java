@@ -1,5 +1,7 @@
 package com.giovani.tad.nonlinear;
 
+import com.giovani.Interseccion;
+
 public class AVL {
     private NodoAVL raiz;
 
@@ -9,8 +11,8 @@ public class AVL {
 
     public NodoAVL buscar(int dato, NodoAVL nodo) {
         if (this.raiz == null) return null;
-        if (nodo.getDato() == dato) return nodo;
-        if (nodo.getDato() < dato) return buscar(dato, nodo.getHijoDerecho());
+        if (nodo.getComplejidad() == dato) return nodo;
+        if (nodo.getComplejidad() < dato) return buscar(dato, nodo.getHijoDerecho());
         return buscar(dato, nodo.getHijoIzquierdo());
     }
 
@@ -55,26 +57,26 @@ public class AVL {
 
     private NodoAVL insertar(NodoAVL nuevo, NodoAVL sub) {
         var nuevoPadre = sub;
-        if (nuevo.getDato() < sub.getDato()) {
+        if (nuevo.getComplejidad() < sub.getComplejidad()) {
             if (sub.getHijoIzquierdo() == null) {
                 sub.setHijoIzquierdo(nuevo);
             } else {
                 sub.setHijoIzquierdo(insertar(nuevo, sub.getHijoIzquierdo()));
                 if (obtenerFE(sub.getHijoIzquierdo()) - obtenerFE(sub.getHijoDerecho()) == 2) {
-                    if (nuevo.getDato() < sub.getHijoIzquierdo().getDato()) {
+                    if (nuevo.getComplejidad() < sub.getHijoIzquierdo().getComplejidad()) {
                         nuevoPadre = rotacionIzquierda(sub);
                     } else {
                         nuevoPadre = rotacionDobleIzquierda(sub);
                     }
                 }
             }
-        } else if (nuevo.getDato() > sub.getDato()) {
+        } else if (nuevo.getComplejidad() > sub.getComplejidad()) {
             if (sub.getHijoDerecho() == null) {
                 sub.setHijoDerecho(nuevo);
             } else {
                 sub.setHijoDerecho(insertar(nuevo, sub.getHijoDerecho()));
                 if (obtenerFE(sub.getHijoDerecho()) - obtenerFE(sub.getHijoIzquierdo()) == 2) {
-                    if (nuevo.getDato() > sub.getHijoDerecho().getDato()) {
+                    if (nuevo.getComplejidad() > sub.getHijoDerecho().getComplejidad()) {
                         nuevoPadre = rotacionDerecha(sub);
                     } else {
                         nuevoPadre = rotacionDobleDerecha(sub);
@@ -94,7 +96,7 @@ public class AVL {
         return nuevoPadre;
     }
 
-    public void insertar(int dato) {
+    public void insertar(Interseccion dato) {
         var nuevo = new NodoAVL(dato);
         if (raiz == null) {
             raiz = nuevo;
@@ -125,7 +127,7 @@ public class AVL {
         if (node != null) {
             //subarbol izquierdo, nodo raiz, subarbol derecho
             inOrder(node.getHijoIzquierdo());
-            System.out.print(node.getDato() + " ");
+            System.out.print(node.getComplejidad() + " ");
             inOrder(node.getHijoDerecho());
         }
     }
@@ -135,14 +137,14 @@ public class AVL {
             //subarbol izquierdo, subarbol derecho, nodo raiz
             postOrder(node.getHijoIzquierdo());
             postOrder(node.getHijoDerecho());
-            System.out.print(node.getDato() + " ");
+            System.out.print(node.getComplejidad() + " ");
         }
     }
 
     private void preOrder(NodoAVL node) {
         if (node != null) {
             //nodo raiz, subarbol izquierdo, subarbol derecho
-            System.out.print(node.getDato() + " ");
+            System.out.print(node.getComplejidad() + " ");
             preOrder(node.getHijoIzquierdo());
             preOrder(node.getHijoDerecho());
         }

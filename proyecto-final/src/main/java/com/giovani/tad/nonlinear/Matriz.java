@@ -1,29 +1,84 @@
 package com.giovani.tad.nonlinear;
 
 import com.giovani.Utilidad;
+import com.giovani.Vehiculo;
 
 import java.util.Random;
 
 public class Matriz {
-    private final Random rd = new Random();
-    private final int fila;
-    private final int columna;
-    private final int celdas;
-    private final NodoOrtogonal inicio;
+    private static final float PORCENTAJE_SEMAFORO = 0.25f;
+    private static final float PORCENTAJE_BLOQUEOS = 0.15f;
+    private final Random rd;
+    private int fila;
+    private int columna;
+    private int celdas;
+    private NodoOrtogonal inicio;
 
 
-    public Matriz(int fila, int columna) {
+    public Matriz(int fila, int columna, Random random) {
+        this.rd = random;
         this.fila = fila; //maximo filas ->26
         this.columna = columna;
         this.inicio = new NodoOrtogonal('C');
         this.celdas = fila * columna;
-        init();
+        crearCapaXY();
     }
 
-    private void init() {
-        crearCapaXY();
+    public void crearObstaculos() {
+        this.celdas = fila * columna;
         crearSemaforo();
         crearBloqueos();
+    }
+
+    public int redimensionar(int filaMax, int columnaMax) {
+        if (filaMax < fila && columnaMax < columna) return 0;
+        int redimensiones = 0;
+        if (columnaMax > columna) {
+            expandirHorizontal(inicio, columnaMax);
+            redimensiones = 1;
+        }
+        if (filaMax > fila) {
+            NodoOrtogonal ultimaFila = inicio;
+            while (ultimaFila.getAbajo() != null) {
+                ultimaFila = ultimaFila.getAbajo();
+            }
+            for (int i = 0; i < filaMax - fila; i++) {
+                NodoOrtogonal primerNodoNuevaFila = new NodoOrtogonal('C');
+                enlazarV(ultimaFila, primerNodoNuevaFila);
+                NodoOrtogonal nodoFilaSuperior = ultimaFila.getDerecha();
+                NodoOrtogonal nodoActualNuevaFila = primerNodoNuevaFila;
+                int columnasActuales = Math.max(columna, columnaMax);
+                for (int j = 0; j < columnasActuales - 1; j++) {
+                    NodoOrtogonal nuevo = new NodoOrtogonal('C');
+                    enlazarHV(nodoFilaSuperior, nodoActualNuevaFila, nuevo);
+                    nodoFilaSuperior = nodoFilaSuperior.getDerecha();
+                    nodoActualNuevaFila = nodoActualNuevaFila.getDerecha();
+                }
+                ultimaFila = primerNodoNuevaFila;
+            }
+            if (redimensiones == 1) {
+                redimensiones = 3;
+            } else {
+                redimensiones = 2;
+            }
+        }
+        return redimensiones;
+    }
+
+    private void expandirHorizontal(NodoOrtogonal actual, int columnaMax) {
+        NodoOrtogonal filaActual = actual;
+        while (filaActual != null) {
+            NodoOrtogonal nodoColumnaFinal = filaActual;
+            while (nodoColumnaFinal.getDerecha() != null) {
+                nodoColumnaFinal = nodoColumnaFinal.getDerecha();
+            }
+            for (int j = 0; j < columnaMax - columna; j++) {
+                NodoOrtogonal nuevo = new NodoOrtogonal('C');
+                enlazarH(nodoColumnaFinal, nuevo);
+                nodoColumnaFinal = nodoColumnaFinal.getDerecha();
+            }
+            filaActual = filaActual.getAbajo();
+        }
     }
 
     public void print() {
@@ -31,10 +86,10 @@ public class Matriz {
         int idFila = 65;
         NodoOrtogonal temp;
         for (var i = inicio; i != null; i = i.getAbajo()) {
-            Utilidad.printCyan((char) idFila);
+            Utilidad.printCyan((char) idFila + "");
             System.out.print("-[ ");
             for (var j = i; j != null; j = j.getDerecha()) {
-                Utilidad.printColor(j.getSimbolo());
+                Utilidad.printCharColor(j.getSimbolo());
                 if (j.getDerecha() == null) {
                     continue;
                 }
@@ -54,16 +109,55 @@ public class Matriz {
         System.out.println(" ");
     }
 
+    public NodoOrtogonal posicioValida(int fila, int columna) {
+        if (fila < 0 || fila >= this.fila || columna < 0 || columna >= this.columna) return null;
+        var temp = getNodo(fila, columna);
+        if (temp == null || temp.getInterseccion().estaBloqueado()) return null;
+        return temp;
+    }
+
+    public void encolar(int fila, int columna, Vehiculo v) {
+        var nodo = getNodo(fila, columna);
+        if (nodo != null) {
+//            if (v.getPrioridad() != -1)
+            nodo.getInterseccion().getCola().enqueue(v.getPrioridad(), v);
+            nodo.getInterseccion().aumentarProcesos();
+            printMensaje(v);
+            return;
+        }
+        Utilidad.printCadenaEnRojo("Posicion no disponible");
+    }
+
+    private void printMensaje(Vehiculo v) {
+        System.out.println("////////////////////////////////////////////////////////////");
+        System.out.print("El vehiculo: " + v.getTipo() + ", ");
+        System.out.print("con placa: " + v.getPlaca());
+        System.out.print(" con origen: (");
+        int x = v.getOrigen().getX();
+        int y = v.getOrigen().getY();
+        System.out.print(((char) (y + 65)) + "" + (x + 1) + ")");
+        System.out.print(" se desplaza a: (");
+        x = v.getActual().getX();
+        y = v.getActual().getY();
+        System.out.print(((char) (y + 65)) + "" + (x + 1) + ")");
+        x = v.getDestino().getX();
+        y = v.getDestino().getY();
+        System.out.print(" con destino: (");
+        System.out.print(((char) (y + 65)) + "" + (x + 1) + ")\n");
+    }
+
     private void crearSemaforo() {
-        int totalSemaforos = (int) (celdas * 0.25);
+        int totalSemaforos = (int) (celdas * PORCENTAJE_SEMAFORO);
         int contador = 0, maxIteraciones = 1000, iteracion = 0;
         do {
             int i = rd.nextInt(fila);
             int j = rd.nextInt(columna);
             var temp = getNodo(i, j);
-            if (temp.getSimbolo() != 'V' || temp.getSimbolo() != 'R') {
-                temp.setSimbolo('R');
-                contador++;
+            if (temp.getSimbolo() == 'C') {
+                if (temp.getInterseccion().getCola().getTam() == 0) {
+                    temp.setSimbolo('R');
+                    contador++;
+                }
             }
             iteracion++;
             if (iteracion == maxIteraciones) break;
@@ -71,28 +165,35 @@ public class Matriz {
     }
 
     private void crearBloqueos() {
-        int totalBloqueos = (int) (celdas * 0.15);
+        int totalBloqueos = (int) (celdas * PORCENTAJE_BLOQUEOS);
         int contador = 0, maxIteraciones = 1000, iteracion = 0;
         do {
             int i = rd.nextInt(fila);
             int j = rd.nextInt(columna);
             var temp = getNodo(i, j);
-            if (temp.getSimbolo() != 'V' || temp.getSimbolo() != 'R' || temp.getSimbolo() != 'B') {
-                temp.setSimbolo('B');
-                contador++;
+            if (temp.getSimbolo() == 'C') {
+                if (temp.getInterseccion().getCola().getTam() == 0) {
+                    temp.setSimbolo('B');
+                    temp.getInterseccion().setCola(null);
+                    contador++;
+                }
             }
             iteracion++;
             if (iteracion == maxIteraciones) break;
         } while (contador != totalBloqueos);
     }
 
-    private NodoOrtogonal getNodo(int fila, int columna) {
+    public NodoOrtogonal getNodo(int _fila, int _columna) {
         var temp = inicio;
-        for (int i = 0; i < fila - 1; i++) {
-            temp = temp.getAbajo();
+        for (int i = 0; i < _fila; i++) {
+            if (temp.getAbajo() != null) {
+                temp = temp.getAbajo();
+            }
         }
-        for (int i = 0; i < columna - 1; i++) {
-            temp = temp.getDerecha();
+        for (int i = 0; i < _columna; i++) {
+            if (temp.getDerecha() != null) {
+                temp = temp.getDerecha();
+            }
         }
         return temp;
     }
@@ -166,5 +267,25 @@ public class Matriz {
         nuevo.setIzquierda(izquierda);
         arriba.setAbajo(nuevo);
         izquierda.setDerecha(nuevo);
+    }
+
+    public NodoOrtogonal getInicio() {
+        return inicio;
+    }
+
+    public int getFila() {
+        return fila;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
     }
 }

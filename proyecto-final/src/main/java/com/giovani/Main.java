@@ -1,24 +1,23 @@
 package com.giovani;
 
+import com.giovani.tad.linear.ColaDePrioridad;
 import com.giovani.tad.linear.StackGeneric;
-import com.giovani.tad.nonlinear.AVL;
 import com.giovani.tad.nonlinear.Matriz;
 import com.giovani.tad.nonlinear.TablaDispersion;
 
+import java.util.Random;
+
+
 public class Main {
     public static void main(String[] args) throws Exception {
-//        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//        for (int i = 0; i < str.length(); i++) {
-//            int number = str.charAt(i) - 65;
-//            System.out.print(number + " ");
-//        }
-
         Simulacion simulacion = new Simulacion();
         simulacion.getMenu();
+        //testEntrada();
     }
 
     private static void testMatriz(int fila, int columna) {
-        Matriz matriz = new Matriz(fila, columna);
+        Random random = new Random();
+        Matriz matriz = new Matriz(fila, columna, random);
         matriz.print();
     }
 
@@ -39,18 +38,25 @@ public class Main {
         System.out.println(dispersion.buscar("P123SAT").toString());
     }
 
-    private static void avlImplementation() {
-        AVL avl = new AVL();
-        avl.insertar(10);
-        avl.insertar(5);
-        avl.insertar(13);
-        avl.insertar(1);
-        avl.insertar(6);
-        avl.insertar(17);
-        avl.preOrder();
-        avl.inOrder();
-        avl.postOrder();
-    }
+//    public static void testEntrada() {
+//        TablaDispersion dispersion = new TablaDispersion();
+//        var temp = new GestorArchivo(dispersion, );
+//        var v = temp.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/temp.csv");
+//        v.print();
+//
+//        System.out.println(" ");
+//        ColaDePrioridad colaDePrioridad = new ColaDePrioridad();
+//        try {
+//            for (int i = 0; i < v.size(); i++) {
+//                var p = v.get(i);
+//                colaDePrioridad.enqueue(p.getPrioridad(), p);
+//            }
+//        } catch (Exception ignored) {
+//        }
+//        while (!colaDePrioridad.isEmpty()) {
+//            System.out.println(colaDePrioridad.dequeue().toString());
+//        }
+//    }
 
     private static void stackImplementation() {
         StackGeneric<Integer> pila = new StackGeneric<>();
