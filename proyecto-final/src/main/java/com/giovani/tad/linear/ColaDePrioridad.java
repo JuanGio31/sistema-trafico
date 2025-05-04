@@ -43,6 +43,19 @@ public class ColaDePrioridad {
         return null;
     }
 
+    public String print() {
+        if (isEmpty()) {
+            return "Cola vacia";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < NUM_PRIORIDADES; i++) {
+            if (!colas[i].isEmpty()) {
+                stringBuilder.append(colas[i].print()).append(" | ");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
     public boolean isEmpty() {
         return tam == 0;
     }

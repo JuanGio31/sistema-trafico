@@ -2,10 +2,12 @@ package com.giovani.tad.nonlinear;
 
 import com.giovani.Utilidad;
 import com.giovani.Vehiculo;
+import com.giovani.tad.linear.StackGeneric;
 
 import java.util.Random;
 
 public class Matriz {
+    private StackGeneric<String> eventos;
     private static final float PORCENTAJE_SEMAFORO = 0.25f;
     private static final float PORCENTAJE_BLOQUEOS = 0.15f;
     private final Random rd;
@@ -21,7 +23,7 @@ public class Matriz {
         this.columna = columna;
         this.inicio = new NodoOrtogonal('C');
         this.celdas = fila * columna;
-        crearCapaXY();
+        crearCapaXY(fila, columna, inicio);
     }
 
     public void crearObstaculos() {
@@ -34,28 +36,11 @@ public class Matriz {
         if (filaMax < fila && columnaMax < columna) return 0;
         int redimensiones = 0;
         if (columnaMax > columna) {
-            expandirHorizontal(inicio, columnaMax);
+            expandirEnHorizontal(inicio, columnaMax);
             redimensiones = 1;
         }
         if (filaMax > fila) {
-            NodoOrtogonal ultimaFila = inicio;
-            while (ultimaFila.getAbajo() != null) {
-                ultimaFila = ultimaFila.getAbajo();
-            }
-            for (int i = 0; i < filaMax - fila; i++) {
-                NodoOrtogonal primerNodoNuevaFila = new NodoOrtogonal('C');
-                enlazarV(ultimaFila, primerNodoNuevaFila);
-                NodoOrtogonal nodoFilaSuperior = ultimaFila.getDerecha();
-                NodoOrtogonal nodoActualNuevaFila = primerNodoNuevaFila;
-                int columnasActuales = Math.max(columna, columnaMax);
-                for (int j = 0; j < columnasActuales - 1; j++) {
-                    NodoOrtogonal nuevo = new NodoOrtogonal('C');
-                    enlazarHV(nodoFilaSuperior, nodoActualNuevaFila, nuevo);
-                    nodoFilaSuperior = nodoFilaSuperior.getDerecha();
-                    nodoActualNuevaFila = nodoActualNuevaFila.getDerecha();
-                }
-                ultimaFila = primerNodoNuevaFila;
-            }
+            expandirEnVertical(inicio, filaMax, columnaMax);
             if (redimensiones == 1) {
                 redimensiones = 3;
             } else {
@@ -65,7 +50,29 @@ public class Matriz {
         return redimensiones;
     }
 
-    private void expandirHorizontal(NodoOrtogonal actual, int columnaMax) {
+    private void expandirEnVertical(NodoOrtogonal actual, int filaMax, int columnaMax) {
+        NodoOrtogonal ultimaFila = actual;
+        while (ultimaFila.getAbajo() != null) {
+            ultimaFila = ultimaFila.getAbajo();
+        }
+        for (int i = 0; i < filaMax - fila; i++) {
+            NodoOrtogonal primerNodoNuevaFila = new NodoOrtogonal('C');
+            enlazarV(ultimaFila, primerNodoNuevaFila);
+            NodoOrtogonal nodoFilaSuperior = ultimaFila.getDerecha();
+            NodoOrtogonal nodoActualNuevaFila = primerNodoNuevaFila;
+
+            int columnasActuales = Math.max(columna, columnaMax);
+            for (int j = 0; j < columnasActuales - 1; j++) {
+                NodoOrtogonal nuevo = new NodoOrtogonal('C');
+                enlazarHV(nodoFilaSuperior, nodoActualNuevaFila, nuevo);
+                nodoFilaSuperior = nodoFilaSuperior.getDerecha();
+                nodoActualNuevaFila = nodoActualNuevaFila.getDerecha();
+            }
+            ultimaFila = primerNodoNuevaFila;
+        }
+    }
+
+    private void expandirEnHorizontal(NodoOrtogonal actual, int columnaMax) {
         NodoOrtogonal filaActual = actual;
         while (filaActual != null) {
             NodoOrtogonal nodoColumnaFinal = filaActual;
@@ -130,20 +137,23 @@ public class Matriz {
 
     private void printMensaje(Vehiculo v) {
         System.out.println("////////////////////////////////////////////////////////////");
-        System.out.print("El vehiculo: " + v.getTipo() + ", ");
-        System.out.print("con placa: " + v.getPlaca());
-        System.out.print(" con origen: (");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("El vehiculo: ").append(v.getTipo()).append(", ");
+        stringBuilder.append("con placa: ").append(v.getPlaca());
+        stringBuilder.append(" con origen: (");
         int x = v.getOrigen().getX();
         int y = v.getOrigen().getY();
-        System.out.print(((char) (y + 65)) + "" + (x + 1) + ")");
-        System.out.print(" se desplaza a: (");
+        stringBuilder.append(((char) (y + 65))).append(x + 1).append(")");
+
+        stringBuilder.append(" se desplaza a: (");
         x = v.getActual().getX();
         y = v.getActual().getY();
-        System.out.print(((char) (y + 65)) + "" + (x + 1) + ")");
+        stringBuilder.append(((char) (y + 65))).append(x + 1).append(")");
         x = v.getDestino().getX();
         y = v.getDestino().getY();
-        System.out.print(" con destino: (");
-        System.out.print(((char) (y + 65)) + "" + (x + 1) + ")\n");
+        stringBuilder.append(" con destino: (");
+        stringBuilder.append(((char) (y + 65))).append(x + 1).append(")\n");
+        eventos.push(stringBuilder.toString());
     }
 
     private void crearSemaforo() {
@@ -216,11 +226,11 @@ public class Matriz {
         System.out.println(" ");
     }
 
-    private void crearCapaXY() {
-        crearEncabezado();
-        crearPrimeraColumna();
-        var filaSuperior = inicio;
-        var filaActual = inicio.getAbajo();
+    private void crearCapaXY(int y, int x, NodoOrtogonal actual) {
+        crearPrimeraFila(x, actual);
+        crearPrimeraColumna(y, actual);
+        var filaSuperior = actual;
+        var filaActual = actual.getAbajo();
         for (int i = 0; i < fila - 1; i++) {
             var temp = filaSuperior.getDerecha();
             for (int j = 0; j < columna - 1; j++) {
@@ -234,18 +244,18 @@ public class Matriz {
         }
     }
 
-    private void crearEncabezado() {
-        var temp = inicio;
-        for (int i = 0; i < columna - 1; i++) {
+    private void crearPrimeraFila(int x, NodoOrtogonal actual) {
+        var temp = actual;
+        for (int i = 0; i < x - 1; i++) {
             var nuevo = new NodoOrtogonal('C');
             enlazarH(temp, nuevo);
             temp = temp.getDerecha();
         }
     }
 
-    private void crearPrimeraColumna() {
-        var temp = inicio;
-        for (int i = 0; i < fila - 1; i++) {
+    private void crearPrimeraColumna(int y, NodoOrtogonal actual) {
+        var temp = actual;
+        for (int i = 0; i < y - 1; i++) {
             var nuevo = new NodoOrtogonal('C');
             enlazarV(temp, nuevo);
             temp = temp.getAbajo();
@@ -287,5 +297,13 @@ public class Matriz {
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+
+    public StackGeneric<String> getEventos() {
+        return eventos;
+    }
+
+    public void setEventos(StackGeneric<String> eventos) {
+        this.eventos = eventos;
     }
 }

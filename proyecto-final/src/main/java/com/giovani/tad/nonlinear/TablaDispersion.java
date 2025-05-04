@@ -1,6 +1,7 @@
 package com.giovani.tad.nonlinear;
 
 import com.giovani.Vehiculo;
+import com.giovani.tad.linear.StackGeneric;
 
 public class TablaDispersion {
     private static int NUMERO_ELEMENTOS = 15;
@@ -17,9 +18,6 @@ public class TablaDispersion {
         if (elementos[indice] == null) {
             return null;
         }
-//        if (elementos[indice].siguiente == null) {
-//            return elementos[indice].valor;
-//        }
         Nodo temp = elementos[indice];
         while (temp != null) {
             if (temp.clave.equals(placa)) {
@@ -52,6 +50,31 @@ public class TablaDispersion {
             rehashing();
         }
     }
+
+//    public void borrar(String placa) {
+//        if (placa != null) {
+//            int indice = getHashCode(placa);
+//            if (elementos[indice] == null) {
+//                return;
+//            }
+//            if (elementos[indice].clave.equals(placa)) {
+//                elementos[indice] = elementos[indice].siguiente;
+//                size--;
+//                return;
+//            }
+//            Nodo anterior = elementos[indice];
+//            Nodo actual = anterior.siguiente;
+//            while (actual != null) {
+//                if (actual.clave.equals(placa)) {
+//                    anterior.siguiente = actual.siguiente;
+//                    size--;
+//                    return;
+//                }
+//                anterior = actual;
+//                actual = actual.siguiente;
+//            }
+//        }
+//    }
 
     private int getHashCode(String placa) {
         return convertirCadena(placa) % NUMERO_ELEMENTOS;
@@ -111,5 +134,4 @@ public class TablaDispersion {
             this.siguiente = null;
         }
     }
-
 }

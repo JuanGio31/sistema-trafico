@@ -70,7 +70,10 @@ public class Interseccion {
     }
 
     public int getComplejidad() {
-        return vehiculosProcesados();
+        if (cola != null) {
+            return cola.getTam();
+        }
+        return 0;
     }
 
     public boolean estaBloqueado() {

@@ -40,17 +40,18 @@ public class ListOrdered {
         return value;
     }
 
-    public void print() {
+    public String print() {
+        StringBuilder stringBuilder = new StringBuilder();
         if (head == null) {
-            System.out.print("Lista vacia!");
+            return "Lista vacia";
         } else {
             var temp = head;
             while (temp != null) {
-                System.out.print(temp.getValue() + " - ");
+                stringBuilder.append(temp.getValue().getTipo()).append(", ").append(temp.getValue().getPlaca()).append(" | ");
                 temp = temp.getNext();
             }
         }
-        System.out.println(" ");
+        return stringBuilder.toString();
     }
 
     public boolean isEmpty() {

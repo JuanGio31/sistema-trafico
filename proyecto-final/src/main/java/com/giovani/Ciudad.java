@@ -13,11 +13,14 @@ public class Ciudad {
     private Matriz matriz;
     private boolean aux = false;
     private final DoublyLinkedList<Vehiculo> vehiculosEnDestino;
-    private Random random;
+    private final Random random;
+    private StackGeneric<String> eventos;
 
-    public Ciudad(int filas, int columnas) {
+    public Ciudad(int filas, int columnas, StackGeneric<String> eventos) {
+        this.eventos = eventos;
         this.random = new Random();
         this.matriz = new Matriz(filas, columnas, random);
+        this.matriz.setEventos(eventos);
         this.avl = new AVL();
         this.vehiculosEnDestino = new DoublyLinkedList<>();
     }
@@ -25,7 +28,7 @@ public class Ciudad {
     public void agregar(Vehiculo vehiculo) {
         Posicion coordenada = vehiculo.getActual();
         Posicion posicion = vehiculo.getMaxCoordenada();
-        int redimensiones = this.matriz.redimensionar(posicion.getY(), posicion.getX());
+        int redimensiones = this.matriz.redimensionar(posicion.getY() + 1, posicion.getX() + 1);
         if (redimensiones == 1) {
             this.matriz.setColumna(posicion.getX() + 1);
         } else if (redimensiones == 2) {
@@ -35,7 +38,13 @@ public class Ciudad {
             this.matriz.setFila(posicion.getY() + 1);
         }
         var temp = this.matriz.posicioValida(coordenada.getY(), coordenada.getX());
-        temp.getInterseccion().getCola().enqueue(vehiculo.getPrioridad(), vehiculo);
+        if (temp != null) {
+            temp.getInterseccion().getCola().enqueue(vehiculo.getPrioridad(), vehiculo);
+            var aux = avl.buscar(temp.getInterseccion());
+            if (aux == null) {
+                avl.insertar(temp.getInterseccion());
+            }
+        }
     }
 
     public void proceso() {
@@ -122,6 +131,7 @@ public class Ciudad {
             if (nodoDestino != null) {
                 vehiculo.setActual(nuevaPosY, nuevaPosX);
                 this.matriz.encolar(nuevaPosY, nuevaPosX, vehiculo);
+                avl.preOrder();
                 return true;
             }
         }

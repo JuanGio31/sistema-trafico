@@ -9,11 +9,29 @@ public class AVL {
         this.raiz = null;
     }
 
-    public NodoAVL buscar(int dato, NodoAVL nodo) {
-        if (this.raiz == null) return null;
-        if (nodo.getComplejidad() == dato) return nodo;
-        if (nodo.getComplejidad() < dato) return buscar(dato, nodo.getHijoDerecho());
-        return buscar(dato, nodo.getHijoIzquierdo());
+//    public NodoAVL buscar(Interseccion dato, NodoAVL nodo) {
+//        if (this.raiz == null) return null;
+//        if (nodo.getDato() == dato) return nodo;
+//        if (nodo.getComplejidad() < dato) return buscar(dato, nodo.getHijoDerecho());
+//        return buscar(dato, nodo.getHijoIzquierdo());
+//    }
+
+    public NodoAVL buscar(Interseccion dato) {
+        return buscar(this.raiz, dato);
+    }
+
+    public NodoAVL buscar(NodoAVL actual, Interseccion dato) {
+        if (actual == null) {
+            return null;
+        }
+        if (actual.getDato() == dato) {
+            return actual;
+        }
+        NodoAVL izq = buscar(actual.getHijoIzquierdo(), dato);
+        if (izq != null) {
+            return izq;
+        }
+        return buscar(actual.getHijoDerecho(), dato);
     }
 
     private int obtenerFE(NodoAVL nodo) {
@@ -39,7 +57,6 @@ public class AVL {
         return aux;
     }
 
-    //rotacion doble a la derecha
     private NodoAVL rotacionDobleIzquierda(NodoAVL nodo) {
         NodoAVL temp;
         nodo.setHijoIzquierdo(rotacionDerecha(nodo.getHijoIzquierdo()));
@@ -47,7 +64,6 @@ public class AVL {
         return temp;
     }
 
-    //rotacion doble a la izquierda
     private NodoAVL rotacionDobleDerecha(NodoAVL nodo) {
         NodoAVL temp;
         nodo.setHijoDerecho(rotacionIzquierda(nodo.getHijoDerecho()));
@@ -127,7 +143,7 @@ public class AVL {
         if (node != null) {
             //subarbol izquierdo, nodo raiz, subarbol derecho
             inOrder(node.getHijoIzquierdo());
-            System.out.print(node.getComplejidad() + " ");
+            System.out.print(node.getDato().getCola() + " ");
             inOrder(node.getHijoDerecho());
         }
     }
@@ -137,14 +153,14 @@ public class AVL {
             //subarbol izquierdo, subarbol derecho, nodo raiz
             postOrder(node.getHijoIzquierdo());
             postOrder(node.getHijoDerecho());
-            System.out.print(node.getComplejidad() + " ");
+            System.out.print(node.getDato().getCola() + " ");
         }
     }
 
     private void preOrder(NodoAVL node) {
         if (node != null) {
             //nodo raiz, subarbol izquierdo, subarbol derecho
-            System.out.print(node.getComplejidad() + " ");
+            System.out.print(node.getDato().getCola().print() + " ");
             preOrder(node.getHijoIzquierdo());
             preOrder(node.getHijoDerecho());
         }

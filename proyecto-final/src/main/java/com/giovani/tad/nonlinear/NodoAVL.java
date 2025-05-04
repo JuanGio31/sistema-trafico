@@ -46,4 +46,12 @@ public class NodoAVL {
     public void setHijoDerecho(NodoAVL hijoDerecho) {
         this.hijoDerecho = hijoDerecho;
     }
+
+    public Interseccion getDato() {
+        return dato;
+    }
+
+    public void setDato(Interseccion dato) {
+        this.dato = dato;
+    }
 }
