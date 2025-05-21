@@ -1,7 +1,5 @@
 package com.giovani;
 
-import com.giovani.tad.linear.DoublyLinkedList;
-import com.giovani.tad.nonlinear.Matriz;
 import com.giovani.tad.nonlinear.TablaDispersion;
 
 import java.io.File;
@@ -13,7 +11,7 @@ import java.util.logging.Logger;
 public class GestorArchivo {
     private static final Logger logger = Logger.getLogger(GestorArchivo.class.getName());
     private final TablaDispersion tablaDispersion;
-    private Ciudad ciudad;
+    private final Ciudad ciudad;
     private int vehiculosRegistrados = 0;
 
     public GestorArchivo(TablaDispersion tablaDispersion, Ciudad ciudad) {
@@ -58,7 +56,12 @@ public class GestorArchivo {
         if (tablaDispersion.buscar(nuevo.getPlaca()) == null) {
             if (nuevo.estaDentroDelRango()) {
                 tablaDispersion.insertar(nuevo.getPlaca(), nuevo);
-                this.ciudad.agregar(nuevo);
+                this.ciudad.agregarVehiculoEnCiudad(nuevo);
+                Posicion destino = nuevo.getDestino();
+                var tmp = ciudad.getInterseccion(destino.getX(), destino.getY());
+                if (tmp != null) {
+                    tmp.setEsDestino(true);
+                }
                 mostrarAlertaIngreso(nuevo);
                 vehiculosRegistrados++;
             } else {

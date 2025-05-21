@@ -4,7 +4,7 @@ import com.giovani.Vehiculo;
 import com.giovani.tad.linear.StackGeneric;
 
 public class TablaDispersion {
-    private static int NUMERO_ELEMENTOS = 15;
+    private static int NUMERO_ELEMENTOS = 55;
     private Nodo[] elementos;
     int size;
 
@@ -91,7 +91,7 @@ public class TablaDispersion {
     private void rehashing() {
         size = 0;
         Nodo[] anterior = elementos;
-        NUMERO_ELEMENTOS = anterior.length * 2;
+        NUMERO_ELEMENTOS = (anterior.length * 2) + 1;
         elementos = new Nodo[NUMERO_ELEMENTOS];
         for (Nodo elemento : anterior) {
             Nodo actual = elemento;
@@ -117,6 +117,20 @@ public class TablaDispersion {
                 System.out.println("null");
             }
         }
+    }
+
+    public StackGeneric<Vehiculo> obtenerVehiculos() {
+        StackGeneric<Vehiculo> lista = new StackGeneric<>();
+        for (int i = 0; i < elementos.length; i++) {
+            if (elementos[i] != null) {
+                Nodo actual = elementos[i];
+                while (actual != null) {
+                    lista.push(actual.valor);
+                    actual = actual.siguiente;
+                }
+            }
+        }
+        return lista;
     }
 
     public int getSize() {

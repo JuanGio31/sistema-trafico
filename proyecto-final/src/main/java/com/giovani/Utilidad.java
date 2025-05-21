@@ -1,5 +1,6 @@
 package com.giovani;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Utilidad {
@@ -10,6 +11,7 @@ public class Utilidad {
     private static final String CYAN = "\u001B[36m";
     private static final String VERDE = "\u001B[32m";
     private static final String AZUL = "\u001B[34m";
+    private static final Random random = new Random();
 
     public static int getNumber(Scanner scanner, String message) {
         int opt;
@@ -32,7 +34,7 @@ public class Utilidad {
     }
 
     public static String getEnter(Scanner scanner) {
-        System.out.print(CYAN + "Presiona enter para continuar" + RESET + " > ");
+        System.out.print(CYAN + "Presiona enter para mover los vehiculos" + RESET + " > ");
         return scanner.nextLine();
     }
 
@@ -42,7 +44,16 @@ public class Utilidad {
             case 'C' -> System.out.print(AZUL + c + RESET);
             case 'B' -> System.out.print(NARANJA + c + RESET);
             case 'V' -> System.out.print(VERDE + c + RESET);
+            default -> System.out.print(c);
         }
+    }
+
+    public static int getNumeroRandom(int limInf, int limSup) {
+        return random.nextInt(limSup - limInf + 1) + limInf;
+    }
+
+    public static boolean getBoolRandom() {
+        return random.nextBoolean();
     }
 
     public static void printCyan(String c) {

@@ -4,7 +4,7 @@ import com.giovani.tad.linear.DoublyLinkedList;
 
 public class Vehiculo implements Comparable<Vehiculo> {
     private final String tipo;
-    private final String Placa;
+    private final String placa;
     private final int nivelUrgencia;
     private final int tiempoEspera;
     private Posicion actual;
@@ -21,7 +21,7 @@ public class Vehiculo implements Comparable<Vehiculo> {
      */
     public Vehiculo(String tipo, String placa, int nivelUrgencia, int tiempoEspera) {
         this.tipo = tipo;
-        Placa = placa;
+        this.placa = placa;
         this.nivelUrgencia = nivelUrgencia;
         this.tiempoEspera = tiempoEspera;
     }
@@ -29,7 +29,7 @@ public class Vehiculo implements Comparable<Vehiculo> {
     @Override
     public String toString() {
         return "V{" + "T='" + tipo + '\'' + ", Placa='" +
-                Placa + '\'' + ", nivelUrgencia=" +
+                placa + '\'' + ", nivelUrgencia=" +
                 nivelUrgencia + ", tiempoEspera=" +
                 tiempoEspera + ", origen(" +
                 origen.getX() + ", " + origen.getY() +
@@ -37,12 +37,19 @@ public class Vehiculo implements Comparable<Vehiculo> {
                 ")" + '}';
     }
 
+    public String getInfo() {
+        int x = this.actual.getX();
+        int y = this.actual.getY();
+        String posicion = "(" + ((char) (y + 65)) + (x + 1) + ")";
+        return tipo + " | " + placa + " | " + "Posicion: " + posicion;
+    }
+
     public String getTipo() {
         return tipo;
     }
 
     public String getPlaca() {
-        return Placa;
+        return placa;
     }
 
     @Override

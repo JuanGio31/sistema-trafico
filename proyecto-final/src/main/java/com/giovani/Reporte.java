@@ -3,19 +3,17 @@ package com.giovani;
 import com.giovani.tad.linear.StackGeneric;
 
 public class Reporte {
-    private StackGeneric<String> eventos;
-    private Ciudad ciudad;
+    private final StackGeneric<String> eventos;
 
-    public Reporte(StackGeneric<String> eventos, Ciudad ciudad) {
+    public Reporte(StackGeneric<String> eventos) {
         this.eventos = eventos;
-        this.ciudad = ciudad;
     }
 
     public void ver() {
-        imprimirPila();
+        mostrarEventos();
     }
 
-    public void imprimirPila() {
+    public void mostrarEventos() {
         int n = Math.min(this.eventos.size(), 20);
         System.out.println("===========================");
         System.out.println("Ultimos " + n + " eventos");
@@ -27,5 +25,18 @@ public class Reporte {
             }
         }
         System.out.println("===========================");
+    }
+
+    public void mostrarReporteCiudad() {
+        System.out.println("===========================");
+        System.out.println("Reporte de la ciudad");
+        //Ranking V, por prioridad y tiempo de cruce
+        //Cantidad total de V que cruzaron por carril
+        //tiempo promedio de espera por tipo de vehiculo
+        //ultimos 20 eventos en pila
+    }
+
+    public void registrarEvento(String evento) {
+        this.eventos.push(evento);
     }
 }

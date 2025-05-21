@@ -6,37 +6,29 @@ import com.giovani.tad.linear.ColaDePrioridad;
  * Clase Interseccion, que representa a un nodo de la matriz ortogonal
  */
 public class Interseccion {
-    private char simbolo;
     private ColaDePrioridad cola;
-    private boolean bloqueo;
+    private boolean esLibre;
     private Semaforo semaforo;
+    private boolean esDestino;
 
-    public Interseccion(char simbolo) {
-        this.simbolo = simbolo;
-        this.bloqueo = false;
+    public Interseccion() {
+        this.esLibre = true;
         this.semaforo = null;
         this.cola = new ColaDePrioridad();
+        this.esDestino = false;
     }
 
     public char getSimbolo() {
-        return simbolo;
-    }
-
-    public void setSimbolo(char simbolo) {
-        if (simbolo == 'B') {
-            this.bloqueo = true;
-        } else if (simbolo == 'R') {
-            if (semaforo == null) {
-                semaforo = new Semaforo('R');
-            }
-            this.bloqueo = true;
-        } else if (simbolo == 'V') {
-            if (semaforo == null) {
-                semaforo = new Semaforo('V');
-            }
-            this.bloqueo = false;
+        if (this.semaforo != null) {
+            return this.semaforo.getColor();
         }
-        this.simbolo = simbolo;
+        if (!this.esLibre) {
+            return 'B';
+        }
+        if (cola.isEmpty()) {
+            return '*';
+        }
+        return 'C';
     }
 
     public ColaDePrioridad getCola() {
@@ -61,11 +53,6 @@ public class Interseccion {
     public void aumentarProcesos() {
         if (semaforo != null) {
             this.semaforo.aumentarContador();
-            if (this.semaforo.getEstado()) {
-                setSimbolo('V');
-            } else {
-                setSimbolo('R');
-            }
         }
     }
 
@@ -76,7 +63,26 @@ public class Interseccion {
         return 0;
     }
 
-    public boolean estaBloqueado() {
-        return this.bloqueo;
+    public boolean isLibre() {
+        if (this.semaforo != null) {
+            return this.semaforo.getEstado();
+        }
+        return esLibre;
+    }
+
+    public void setEsLibre(boolean esLibre) {
+        this.esLibre = esLibre;
+    }
+
+    public void setSemaforo(Semaforo semaforo) {
+        this.semaforo = semaforo;
+    }
+
+    public boolean isEsDestino() {
+        return esDestino;
+    }
+
+    public void setEsDestino(boolean esDestino) {
+        this.esDestino = esDestino;
     }
 }

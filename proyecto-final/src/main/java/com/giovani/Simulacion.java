@@ -1,6 +1,5 @@
 package com.giovani;
 
-import com.giovani.tad.linear.StackGeneric;
 import com.giovani.tad.nonlinear.TablaDispersion;
 
 import java.util.Scanner;
@@ -9,37 +8,42 @@ public class Simulacion {
     private final Ciudad ciudad;
     private final TablaDispersion dispersion;
     private final Scanner scanner = new Scanner(System.in);
-    private StackGeneric<String> eventos;
-    private Reporte reporte;
+    //private final StackGeneric<String> eventos;
+//    private Reporte reporte;
 
     public Simulacion() {
-        this.eventos = new StackGeneric<>();
-        this.ciudad = new Ciudad(10, 10, eventos);
+//        this.eventos = new StackGeneric<>();
+        ciudad = new Ciudad(10, 10);
         this.dispersion = new TablaDispersion();
-        this.reporte = new Reporte(eventos, ciudad);
+        //this.reporte = new Reporte(eventos, ciudad);
     }
 
     public void init() {
-        this.ciudad.getMatriz().crearObstaculos();
+        this.ciudad.generarObstaculos();
         boolean loop = true;
         String input;
+        ciudad.imprimirEstructura();
         do {
-            ciudad.proceso();
+            imprimirMenuDeSimulacion();
             input = Utilidad.getEnter(scanner);
+            if (input.isBlank()) {
+                ciudad.generarMovimiento();
+                ciudad.imprimirEstructura();
+            }
             if (input.length() == 1 && input.charAt(0) == 'q') loop = false;
-            if (input.length() == 1 && input.charAt(0) == 'm') registrarVehiculo();
-            if (input.length() == 1 && input.charAt(0) == 'a') cargaCSV();
-            //mostrar reportes del simulador
+            //if (input.length() == 1 && input.charAt(0) == 'm') registrarVehiculo();
+            if (input.length() == 1 && Character.toLowerCase(input.charAt(0)) == 'a') cargaCSV();
+            if (input.length() == 1 && Character.toLowerCase(input.charAt(0)) == 'b') buscarPorPlaca();
             if (dispersion.getSize() == ciudad.getVehiculosEnDestino().size()) break;
         } while (loop);
         ciudad.getVehiculosEnDestino().print();
-        reporte.ver();
+        //reporte.ver();
     }
 
     public void getMenu() {
         int option;
         do {
-            printMenuOp();
+            imprimirMenuPrincipal();
             option = Utilidad.getNumber(scanner, "Seleccione una opcion");
             switch (option) {
                 case 1 -> {
@@ -54,20 +58,20 @@ public class Simulacion {
     }
 
     private void cargaCSV() {
-        int vehiculosRegistrados = 0;
-        GestorArchivo gestorArchivo = new GestorArchivo(this.dispersion, ciudad);
+        int vehiculosRegistrados;
+        GestorArchivo gestorArchivo = new GestorArchivo(this.dispersion, this.ciudad);
         do {
-            String path = Utilidad.getString(scanner, "Ingresar la ruta del archivo");
-            vehiculosRegistrados = gestorArchivo.readCSV(path);
-//            vehiculosRegistrados = gestorArchivo.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/prueba.csv");
+            //String path = Utilidad.getString(scanner, "Ingresar la ruta del archivo");
+            //vehiculosRegistrados = gestorArchivo.readCSV(path);
+            vehiculosRegistrados = gestorArchivo.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/prueba.csv");
         } while (vehiculosRegistrados == -1);
         System.out.println("Se agregaron: " + vehiculosRegistrados + " vehiculos.");
-        eventos.push("-Se agregaron: " + vehiculosRegistrados + " vehiculos.");
-        //dispersion.mostrarEstructura();
+        //eventos.push("-Se agregaron: " + vehiculosRegistrados + " vehiculos.");
+//        dispersion.mostrarEstructura();
     }
 
     private int ingresarPrioridadVehiculo() {
-        int prioridad = 0;
+        int prioridad;
         do {
             prioridad = Utilidad.getNumber(scanner, "Ingrese la prioridad del vehiculo");
             if (prioridad < 1 || prioridad > 5) {
@@ -80,7 +84,7 @@ public class Simulacion {
     }
 
     private void registrarVehiculo() {
-        String entrada = " ";
+        String entrada;
         do {
             System.out.println("Registrando vehiculo...");
             String placa = ingresarPlaca();
@@ -92,7 +96,7 @@ public class Simulacion {
             Posicion destino = ingresarPosicion();
             nuevo.setOrigen(origen);
             nuevo.setDestino(destino);
-            ciudad.agregar(nuevo);
+            ciudad.agregarVehiculoEnCiudad(nuevo);
             dispersion.insertar(placa, nuevo);
             Utilidad.printCyan("Vehiculo registrado.\n");
             entrada = Utilidad.getString(scanner, "Ingrese 'salir' si ya no quiere registrar mas vehiculos.");
@@ -100,7 +104,7 @@ public class Simulacion {
     }
 
     private int ingresarTiempoEsperaVehiculo() {
-        int tiempo = 0;
+        int tiempo;
         do {
             tiempo = Utilidad.getNumber(scanner, "Ingrese el tiempo de espera del vehiculo");
             if (tiempo < 1) {
@@ -113,7 +117,7 @@ public class Simulacion {
     }
 
     private String ingresarPlaca() {
-        String placa = " ";
+        String placa;
         do {
             placa = Utilidad.getString(scanner, "Ingrese la placa del vehiculo").trim();
             if (placa.length() < 8) {
@@ -131,7 +135,7 @@ public class Simulacion {
 
     private Posicion ingresarPosicion() {
         boolean posValida = false;
-        String posicion = " ";
+        String posicion;
         int fila = -1, columna = -1;
         do {
             posicion = Utilidad.getString(
@@ -157,7 +161,7 @@ public class Simulacion {
             } catch (NumberFormatException e) {
                 Utilidad.printCadenaEnRojo("La columna debe ser un numero entre 1-27.");
             }
-            var aux = this.ciudad.getMatriz().posicioValida(fila, columna);
+            var aux = this.ciudad.getInterseccion(columna, fila);
             if (aux == null) {
                 Utilidad.printCadenaEnRojo("La ubicacion esta bloqueada");
                 posValida = false;
@@ -168,7 +172,7 @@ public class Simulacion {
 
     private String seleccionarTipoVehiculo() {
         do {
-            printMenuSeleccionTipo();
+            imprimirSeleccionTipo();
             int option = Utilidad.getNumber(scanner, "Seleccione una opcion");
             if (option == 1) return "AMBULANCIA";
             if (option == 2) return "POLICIA";
@@ -178,7 +182,7 @@ public class Simulacion {
         } while (true);
     }
 
-    private void printMenuSeleccionTipo() {
+    private void imprimirSeleccionTipo() {
         String options = """
                 \t+ - SELECCIONAR TIPO DE VEHICULO - +
                 \t|     (1) AMBULANCIA               |
@@ -190,12 +194,38 @@ public class Simulacion {
         System.out.println(options);
     }
 
-    private void printMenuOp() {
+    private void imprimirMenuPrincipal() {
         String options = """
                 \t+ - - SISTEMA DE TRAFICO. - - +
                 \t| (1) INICIAR SIMULACION.     |
                 \t| (0) SALIR.                  |
                 \t+ - - - - - - - - - - - - - - +
+                """;
+        System.out.println(options);
+    }
+
+    private void buscarPorPlaca() {
+        String placa = Utilidad.getString(scanner, "Ingresar placa a buscar");
+        var vehiculo = dispersion.buscar(placa.trim());
+        if (vehiculo != null) {
+            System.out.print(vehiculo.getInfo());
+            if (vehiculo.finRecorrido()) {
+                System.out.println(", ya ha llegado a su destino");
+            }
+        } else {
+            System.out.println("No se encontraron coincidencias.");
+        }
+        System.out.println(" ");
+    }
+
+    private void imprimirMenuDeSimulacion() {
+        String options = """
+                \t + - - - - - - OPCIONES - - - - - - +
+                \t | (a) Ingresar Vehiculo.           |
+                \t | (a) Ingresar Vehiculo.           |
+                \t | (b) Buscar Vehiculo por placa.   |
+                \t | (m) I.V. por CSV.                |
+                \t | (q) salir.                       |
                 """;
         System.out.println(options);
     }

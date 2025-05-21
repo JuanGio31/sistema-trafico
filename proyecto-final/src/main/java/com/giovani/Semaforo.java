@@ -1,16 +1,23 @@
 package com.giovani;
 
 public class Semaforo {
-    private boolean estado;
+    private boolean esLibre;
     private int contador;
 
     public Semaforo(char c) {
-        this.estado = c == 'V';
+        this.esLibre = c == 'V';
         this.contador = 0;
     }
 
-    private void cambiarEstado() {
-        this.estado = !this.estado;
+    public char getColor() {
+        if (this.esLibre) {
+            return 'V';
+        }
+        return 'R';
+    }
+
+    public void cambiarEstado() {
+        this.esLibre = !this.esLibre;
     }
 
     public void aumentarContador() {
@@ -22,11 +29,11 @@ public class Semaforo {
     }
 
     public boolean getEstado() {
-        return estado;
+        return esLibre;
     }
 
     public String mostarEstado() {
-        if (this.estado) {
+        if (this.esLibre) {
             return "Semaforo en Verde";
         }
         return "Semaforo en Rojo";

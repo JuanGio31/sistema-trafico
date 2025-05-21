@@ -32,9 +32,6 @@ public class Posicion {
 
     @Override
     public String toString() {
-        return "Posicion{" +
-                "y=" + y +
-                ", x=" + x +
-                '}';
+        return "Posicion{" + "Fila: " + y + ", Columna: " + x + '}';
     }
 }
