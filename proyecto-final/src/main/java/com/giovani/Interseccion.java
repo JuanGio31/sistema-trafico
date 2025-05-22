@@ -6,6 +6,7 @@ import com.giovani.tad.linear.ColaDePrioridad;
  * Clase Interseccion, que representa a un nodo de la matriz ortogonal
  */
 public class Interseccion {
+    private String id;
     private ColaDePrioridad cola;
     private boolean esLibre;
     private Semaforo semaforo;
@@ -16,6 +17,14 @@ public class Interseccion {
         this.semaforo = null;
         this.cola = new ColaDePrioridad();
         this.esDestino = false;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public char getSimbolo() {
@@ -58,7 +67,7 @@ public class Interseccion {
 
     public int getComplejidad() {
         if (cola != null) {
-            return cola.getTam();
+            return cola.getNumProcesos();
         }
         return 0;
     }
@@ -84,5 +93,16 @@ public class Interseccion {
 
     public void setEsDestino(boolean esDestino) {
         this.esDestino = esDestino;
+    }
+
+    public void mostrarEstado() {
+        if (this.semaforo != null) {
+            System.out.println("Interseccion: " + this.semaforo.mostarEstado());
+            cola.print();
+        } else if (!this.esLibre) {
+            System.out.println("Existe un bloqueo en esta interseccion");
+        } else {
+            this.cola.print();
+        }
     }
 }

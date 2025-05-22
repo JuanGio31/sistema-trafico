@@ -6,7 +6,8 @@ public class Vehiculo implements Comparable<Vehiculo> {
     private final String tipo;
     private final String placa;
     private final int nivelUrgencia;
-    private final int tiempoEspera;
+    private int tiempoEspera;
+    private int tiempoDeViaje;
     private Posicion actual;
     private Posicion origen;
     private Posicion destino;
@@ -24,17 +25,7 @@ public class Vehiculo implements Comparable<Vehiculo> {
         this.placa = placa;
         this.nivelUrgencia = nivelUrgencia;
         this.tiempoEspera = tiempoEspera;
-    }
-
-    @Override
-    public String toString() {
-        return "V{" + "T='" + tipo + '\'' + ", Placa='" +
-                placa + '\'' + ", nivelUrgencia=" +
-                nivelUrgencia + ", tiempoEspera=" +
-                tiempoEspera + ", origen(" +
-                origen.getX() + ", " + origen.getY() +
-                "), destino(" + destino.getX() + ", " + destino.getY() +
-                ")" + '}';
+        this.tiempoDeViaje = tiempoEspera;
     }
 
     public String getInfo() {
@@ -54,11 +45,11 @@ public class Vehiculo implements Comparable<Vehiculo> {
 
     @Override
     public int compareTo(Vehiculo otro) {
-        int urgencia = Integer.compare(this.nivelUrgencia, otro.nivelUrgencia);
-        if (urgencia == 0) {
-            return Integer.compare(this.tiempoEspera, otro.tiempoEspera);
+        if (this.getNivelUrgencia() != otro.getNivelUrgencia()) {
+            return Integer.compare(otro.getNivelUrgencia(), this.getNivelUrgencia());
+        } else {
+            return Integer.compare(otro.getTiempoEspera(), this.getTiempoEspera());
         }
-        return urgencia;
     }
 
     public int getPrioridad() {
@@ -85,16 +76,24 @@ public class Vehiculo implements Comparable<Vehiculo> {
         this.actual = origen;
     }
 
-    public Posicion getOrigen() {
-        return origen;
-    }
-
     public Posicion getActual() {
         return actual;
     }
 
     public Posicion getDestino() {
         return destino;
+    }
+
+    public int getNivelUrgencia() {
+        return nivelUrgencia;
+    }
+
+    public int getTiempoEspera() {
+        return tiempoEspera;
+    }
+
+    public void incrementarTiempo() {
+        this.tiempoDeViaje++;
     }
 
     public void setDestino(Posicion destino) {
@@ -112,16 +111,11 @@ public class Vehiculo implements Comparable<Vehiculo> {
                 (this.getMaxCoordenada().getX() >= 0 && this.getMaxCoordenada().getX() < 27);
     }
 
-    public DoublyLinkedList<Posicion> getCoordenadasAdyacentes() {
-        DoublyLinkedList<Posicion> coordenadas = new DoublyLinkedList<>();
-        int x = this.getActual().getX();
-        int y = this.getActual().getY();
+    public int getTiempoDeViaje() {
+        return tiempoDeViaje;
+    }
 
-        coordenadas.addLast(new Posicion(y - 1, x));    // Arriba
-        coordenadas.addLast(new Posicion(y + 1, x));    // Abajo
-        coordenadas.addLast(new Posicion(y, x - 1));    // Izquierda
-        coordenadas.addLast(new Posicion(y, x + 1));    // Derecha
-
-        return coordenadas;
+    public void setTiempoEspera(int tiempoEspera) {
+        this.tiempoEspera = tiempoEspera;
     }
 }

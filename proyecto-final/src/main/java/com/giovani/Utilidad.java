@@ -33,8 +33,8 @@ public class Utilidad {
         return scanner.nextLine();
     }
 
-    public static String getEnter(Scanner scanner) {
-        System.out.print(CYAN + "Presiona enter para mover los vehiculos" + RESET + " > ");
+    public static String getEnter(Scanner scanner, String message) {
+        System.out.print(CYAN + message + RESET + " > ");
         return scanner.nextLine();
     }
 
@@ -90,5 +90,9 @@ public class Utilidad {
             num = -1;
         }
         return num;
+    }
+
+    public static String getPos(int x, int y) {
+        return " " + ((char) (y + 65)) + (x + 1);
     }
 }

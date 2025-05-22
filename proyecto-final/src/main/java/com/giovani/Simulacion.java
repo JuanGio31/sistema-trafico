@@ -5,39 +5,51 @@ import com.giovani.tad.nonlinear.TablaDispersion;
 import java.util.Scanner;
 
 public class Simulacion {
-    private final Ciudad ciudad;
-    private final TablaDispersion dispersion;
+    private Ciudad ciudad;
+    private TablaDispersion dispersion;
     private final Scanner scanner = new Scanner(System.in);
-    //private final StackGeneric<String> eventos;
-//    private Reporte reporte;
-
-    public Simulacion() {
-//        this.eventos = new StackGeneric<>();
-        ciudad = new Ciudad(10, 10);
-        this.dispersion = new TablaDispersion();
-        //this.reporte = new Reporte(eventos, ciudad);
-    }
+    private Reporte reporte;
 
     public void init() {
+        int contador = 0;
         this.ciudad.generarObstaculos();
         boolean loop = true;
         String input;
         ciudad.imprimirEstructura();
         do {
             imprimirMenuDeSimulacion();
-            input = Utilidad.getEnter(scanner);
+            input = Utilidad.getEnter(scanner, "Presiona enter para mover los vehiculos");
             if (input.isBlank()) {
-                ciudad.generarMovimiento();
+                ciudad.generarAcciones();
                 ciudad.imprimirEstructura();
+                contador++;
+            } else if (input.length() == 1) {
+                switch (Character.toLowerCase(input.charAt(0))) {
+                    case 'b' -> buscarPorPlaca();
+                    case 'e' -> verEstadoInterseccion();
+                    case 'm' -> registrarVehiculo();
+                    case 'd' -> mostrarEstadoDeColas();
+                    case 'q' -> {
+                        contador--;
+                        loop = false;
+//                    case 'a' -> cargaCSV();
+                    }
+                    default -> {
+                        Utilidad.printCadenaEnRojo("Opcion no valida.");
+                        if (contador != 0) {
+                            contador--;
+                        }
+                    }
+                }
+                contador++;
             }
-            if (input.length() == 1 && input.charAt(0) == 'q') loop = false;
-            //if (input.length() == 1 && input.charAt(0) == 'm') registrarVehiculo();
-            if (input.length() == 1 && Character.toLowerCase(input.charAt(0)) == 'a') cargaCSV();
-            if (input.length() == 1 && Character.toLowerCase(input.charAt(0)) == 'b') buscarPorPlaca();
+            if (contador == 3) {
+                reporte.mostrarEventos(ciudad.getEventos());
+                contador = 0;
+            }
             if (dispersion.getSize() == ciudad.getVehiculosEnDestino().size()) break;
         } while (loop);
-        ciudad.getVehiculosEnDestino().print();
-        //reporte.ver();
+        reporte.mostrarReporteCiudad();
     }
 
     public void getMenu() {
@@ -47,7 +59,12 @@ public class Simulacion {
             option = Utilidad.getNumber(scanner, "Seleccione una opcion");
             switch (option) {
                 case 1 -> {
+                    System.out.println("Iniciando simulacion...");
+                    ciudad = new Ciudad(8, 8);
+                    this.dispersion = new TablaDispersion();
+                    this.reporte = new Reporte(ciudad, dispersion);
                     cargaCSV();
+                    Utilidad.getEnter(scanner, "Presione enter para iniciar la simulacion");
                     init();
                 }
                 case 0 -> System.out.println("Saliendo...");
@@ -61,13 +78,11 @@ public class Simulacion {
         int vehiculosRegistrados;
         GestorArchivo gestorArchivo = new GestorArchivo(this.dispersion, this.ciudad);
         do {
-            //String path = Utilidad.getString(scanner, "Ingresar la ruta del archivo");
-            //vehiculosRegistrados = gestorArchivo.readCSV(path);
-            vehiculosRegistrados = gestorArchivo.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/prueba.csv");
+            String path = Utilidad.getString(scanner, "Ingresar la ruta del archivo");
+            vehiculosRegistrados = gestorArchivo.readCSV(path);
+//            vehiculosRegistrados = gestorArchivo.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/prueba.csv");
         } while (vehiculosRegistrados == -1);
         System.out.println("Se agregaron: " + vehiculosRegistrados + " vehiculos.");
-        //eventos.push("-Se agregaron: " + vehiculosRegistrados + " vehiculos.");
-//        dispersion.mostrarEstructura();
     }
 
     private int ingresarPrioridadVehiculo() {
@@ -92,7 +107,9 @@ public class Simulacion {
             int prioridad = ingresarPrioridadVehiculo();
             int tiempo = ingresarTiempoEsperaVehiculo();
             Vehiculo nuevo = new Vehiculo(tipo, placa, prioridad, tiempo);
+            System.out.println("Ingresar Posicion de origen: ");
             Posicion origen = ingresarPosicion();
+            System.out.println("Ingresar Posicion de destino: ");
             Posicion destino = ingresarPosicion();
             nuevo.setOrigen(origen);
             nuevo.setDestino(destino);
@@ -161,13 +178,13 @@ public class Simulacion {
             } catch (NumberFormatException e) {
                 Utilidad.printCadenaEnRojo("La columna debe ser un numero entre 1-27.");
             }
-            var aux = this.ciudad.getInterseccion(columna, fila);
+            var aux = this.ciudad.getInterseccion(columna - 1, fila);
             if (aux == null) {
                 Utilidad.printCadenaEnRojo("La ubicacion esta bloqueada");
                 posValida = false;
             }
         } while (!posValida);
-        return new Posicion(fila, columna);
+        return new Posicion(fila, columna - 1);
     }
 
     private String seleccionarTipoVehiculo() {
@@ -218,15 +235,70 @@ public class Simulacion {
         System.out.println(" ");
     }
 
+    private void verEstadoInterseccion() {
+        boolean posValida = false;
+        String posicion;
+        int fila = -1, columna = -1;
+        do {
+            posicion = Utilidad.getString(
+                    scanner,
+                    "Ingrese la interseccion del vehiculo, Ejemplo: A1" +
+                            "\nLa fila debe ser una letra de A-Z, la columna un numero entre 1-27");
+            if (posicion.length() < 2) {
+                Utilidad.printCadenaEnRojo("La interseccion debe tener mas de 1 caracter, Ejemplo: B1.");
+                continue;
+            }
+            if (posicion.charAt(0) < 'A' || posicion.charAt(0) > 'Z') {
+                Utilidad.printCadenaEnRojo("la fila se identifica con una letra del abecedario.");
+                continue;
+            }
+            fila = Utilidad.convertirCharAEntero(posicion.charAt(0));
+            try {
+                columna = Integer.parseInt(posicion.substring(1));
+                if (columna < 1 || columna > 27) {
+                    Utilidad.printCadenaEnRojo("La columna debe ser un numero entre 1-27.");
+                    continue;
+                }
+                posValida = true;
+            } catch (NumberFormatException e) {
+                Utilidad.printCadenaEnRojo("La columna debe ser un numero entre 1-27.");
+            }
+        } while (!posValida);
+        var interseccion = ciudad.getInterseccion(columna - 1, fila);
+        if (interseccion != null) {
+            interseccion.mostrarEstado();
+        } else {
+            System.out.println("Error: problemas con la interseccion.");
+        }
+    }
+
     private void imprimirMenuDeSimulacion() {
         String options = """
-                \t + - - - - - - OPCIONES - - - - - - +
-                \t | (a) Ingresar Vehiculo.           |
-                \t | (a) Ingresar Vehiculo.           |
-                \t | (b) Buscar Vehiculo por placa.   |
-                \t | (m) I.V. por CSV.                |
-                \t | (q) salir.                       |
+                \t + - - - - - - OPCIONES - - - - - - -  +
+                \t | (b) Buscar Vehiculo por placa.      |
+                \t | (d) Ver estado de Colas.            |
+                \t | (e) Ver estado de la interseccion.  |
+                \t | (m) Ingresar Vehiculo.              |
+                \t | (q) salir.                          |
                 """;
         System.out.println(options);
+    }
+
+    private void mostrarEstadoDeColas() {
+        System.out.println("\nEstado de colas:");
+        for (int i = 0; i < ciudad.getFilas(); i++) {
+            for (int j = 0; j < ciudad.getColumnas(); j++) {
+                var interseccion = ciudad.getInterseccion(j, i);
+                if (interseccion != null) {
+                    if (interseccion.getCola() != null) {
+                        System.out.print(interseccion.getCola().getTam());
+                    } else {
+                        Utilidad.printCharColor(interseccion.getSimbolo());
+                    }
+                    System.out.print(" ");
+                }
+            }
+            System.out.println(" ");
+        }
     }
 }

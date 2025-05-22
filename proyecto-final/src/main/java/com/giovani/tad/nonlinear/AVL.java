@@ -2,6 +2,9 @@ package com.giovani.tad.nonlinear;
 
 import com.giovani.Interseccion;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 public class AVL {
     private NodoAVL raiz;
 
@@ -24,7 +27,7 @@ public class AVL {
         if (actual == null) {
             return null;
         }
-        if (actual.getDato() == dato) {
+        if (actual.getDato().getId().equals(dato.getId())) {
             return actual;
         }
         NodoAVL izq = buscar(actual.getHijoIzquierdo(), dato);
@@ -99,9 +102,10 @@ public class AVL {
                     }
                 }
             }
-        } else {
-            System.out.println("Nodo duplicado!");
         }
+//        else {
+//            System.out.println("Nodo duplicado!");
+//        }
         if (sub.getHijoIzquierdo() == null && sub.getHijoDerecho() != null) {
             sub.setFe(sub.getHijoDerecho().getFe() + 1);
         } else if (sub.getHijoDerecho() == null && sub.getHijoIzquierdo() != null) {
@@ -143,7 +147,7 @@ public class AVL {
         if (node != null) {
             //subarbol izquierdo, nodo raiz, subarbol derecho
             inOrder(node.getHijoIzquierdo());
-            System.out.print(node.getDato().getCola() + " ");
+            System.out.print(node.getDato().getId() + "[" + node.getDato().getCola().getNumProcesos() + "] - ");
             inOrder(node.getHijoDerecho());
         }
     }
@@ -153,16 +157,54 @@ public class AVL {
             //subarbol izquierdo, subarbol derecho, nodo raiz
             postOrder(node.getHijoIzquierdo());
             postOrder(node.getHijoDerecho());
-            System.out.print(node.getDato().getCola() + " ");
+            System.out.print(node.getDato().getId() + "[" + node.getDato().getCola().getNumProcesos() + "] - ");
         }
     }
 
     private void preOrder(NodoAVL node) {
         if (node != null) {
             //nodo raiz, subarbol izquierdo, subarbol derecho
-            System.out.print(node.getDato().getCola().print() + " ");
+            System.out.print(node.getDato().getId() + "[" + node.getDato().getCola().getNumProcesos() + "] - ");
             preOrder(node.getHijoIzquierdo());
             preOrder(node.getHijoDerecho());
+        }
+    }
+
+    public String obtenerGraphviz() {
+        String texto = "digraph G {\n"
+                + "   node[shape = square, style = filled, fillcolor = \"#57B8FF\", color = \"#2176AE\"];\n"
+                + "   edge[color = \"#31CEFO\"];\n";
+        if (raiz != null) {
+            texto += raiz.textoGraphviz();
+        }
+        texto += "\n}";
+        return texto;
+    }
+
+    public void escribirArchivo(String path, String contenido) {
+        FileWriter fichero;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter(path);
+            pw = new PrintWriter(fichero);
+            pw.write(contenido);
+            pw.close();
+            fichero.close();
+        } catch (Exception e) {
+            System.err.println("Error al escribir el archivo " + path);
+        } finally {
+            if (pw != null) pw.close();
+        }
+    }
+
+    public void dibujar() {
+        try {
+            escribirArchivo("archivo.dot", obtenerGraphviz());
+            ProcessBuilder processBuilder = new ProcessBuilder("dot", "-Tjpg", "archivo.dot", "-o", "archivo.jpg");
+            processBuilder.redirectErrorStream(true);
+            processBuilder.start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }

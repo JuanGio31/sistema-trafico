@@ -31,12 +31,29 @@ public class StackGeneric<T> {
         return value;
     }
 
+    public void limpiar() {
+        this.top = null;
+        this._size = 0;
+    }
+
     public boolean isEmpty() {
         return top == null;
     }
 
     public int size() {
         return this._size;
+    }
+
+    public void set_size(int _size) {
+        this._size = _size;
+    }
+
+    public NodeGeneric<T> getTop() {
+        return top;
+    }
+
+    public void setTop(NodeGeneric<T> top) {
+        this.top = top;
     }
 }
 //push, pop, peek

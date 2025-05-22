@@ -1,0 +1,22 @@
+digraph G {
+   node[shape = square, style = filled, fillcolor = "#57B8FF", color = "#2176AE"];
+   edge[color = "#31CEFO"];
+" P4" [label=" P4
+3"];
+" P4" -> " A2";
+" A2" [label=" A2
+1"];
+" A2" -> " A1";
+" A1" [label=" A1
+0"];
+" A2" -> " D2";
+" D2" [label=" D2
+2"];
+" P4" -> " C4";
+" C4" [label=" C4
+4"];
+" C4" -> " N2";
+" N2" [label=" N2
+5"];
+
+}

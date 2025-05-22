@@ -43,14 +43,26 @@ public class ColaDePrioridad {
         return null;
     }
 
-    public String print() {
+    public void print() {
+        if (isEmpty()) {
+            System.out.println("Cola vacia");
+        }
+        for (int i = 0; i < NUM_PRIORIDADES; i++) {
+            if (!colas[i].isEmpty()) {
+                colas[i].print();
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
         if (isEmpty()) {
             return "Cola vacia";
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < NUM_PRIORIDADES; i++) {
             if (!colas[i].isEmpty()) {
-                stringBuilder.append(colas[i].print()).append(" | ");
+                stringBuilder.append(colas[i].toString()).append(" | ");
             }
         }
         return stringBuilder.toString();

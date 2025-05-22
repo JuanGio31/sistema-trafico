@@ -40,7 +40,20 @@ public class ListOrdered {
         return value;
     }
 
-    public String print() {
+    public void print() {
+        if (head == null) {
+            System.out.println("Lista vacia");
+        } else {
+            var temp = head;
+            while (temp != null) {
+                System.out.println(temp.getValue().getTipo() + ", " + temp.getValue().getPlaca());
+                temp = temp.getNext();
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         if (head == null) {
             return "Lista vacia";
