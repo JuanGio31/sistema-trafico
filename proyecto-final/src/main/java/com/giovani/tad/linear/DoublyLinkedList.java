@@ -42,7 +42,7 @@ public class DoublyLinkedList<T> {
         } else {
             var current = head;
             while (current != null) {
-                System.out.println(current.getValue() + " -> ");
+                System.out.println(current.getValue());
                 current = current.getNext();
             }
         }

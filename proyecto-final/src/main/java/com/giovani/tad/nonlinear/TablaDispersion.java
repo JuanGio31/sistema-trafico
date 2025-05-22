@@ -51,31 +51,6 @@ public class TablaDispersion {
         }
     }
 
-//    public void borrar(String placa) {
-//        if (placa != null) {
-//            int indice = getHashCode(placa);
-//            if (elementos[indice] == null) {
-//                return;
-//            }
-//            if (elementos[indice].clave.equals(placa)) {
-//                elementos[indice] = elementos[indice].siguiente;
-//                size--;
-//                return;
-//            }
-//            Nodo anterior = elementos[indice];
-//            Nodo actual = anterior.siguiente;
-//            while (actual != null) {
-//                if (actual.clave.equals(placa)) {
-//                    anterior.siguiente = actual.siguiente;
-//                    size--;
-//                    return;
-//                }
-//                anterior = actual;
-//                actual = actual.siguiente;
-//            }
-//        }
-//    }
-
     private int getHashCode(String placa) {
         return convertirCadena(placa) % NUMERO_ELEMENTOS;
     }

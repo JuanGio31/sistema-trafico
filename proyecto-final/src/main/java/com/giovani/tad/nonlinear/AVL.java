@@ -12,13 +12,6 @@ public class AVL {
         this.raiz = null;
     }
 
-//    public NodoAVL buscar(Interseccion dato, NodoAVL nodo) {
-//        if (this.raiz == null) return null;
-//        if (nodo.getDato() == dato) return nodo;
-//        if (nodo.getComplejidad() < dato) return buscar(dato, nodo.getHijoDerecho());
-//        return buscar(dato, nodo.getHijoIzquierdo());
-//    }
-
     public NodoAVL buscar(Interseccion dato) {
         return buscar(this.raiz, dato);
     }

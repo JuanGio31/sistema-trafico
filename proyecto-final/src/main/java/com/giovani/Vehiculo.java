@@ -1,7 +1,5 @@
 package com.giovani;
 
-import com.giovani.tad.linear.DoublyLinkedList;
-
 public class Vehiculo implements Comparable<Vehiculo> {
     private final String tipo;
     private final String placa;
@@ -26,6 +24,11 @@ public class Vehiculo implements Comparable<Vehiculo> {
         this.nivelUrgencia = nivelUrgencia;
         this.tiempoEspera = tiempoEspera;
         this.tiempoDeViaje = tiempoEspera;
+    }
+
+    @Override
+    public String toString() {
+        return tipo + " | " + placa + " | " + tiempoDeViaje;
     }
 
     public String getInfo() {

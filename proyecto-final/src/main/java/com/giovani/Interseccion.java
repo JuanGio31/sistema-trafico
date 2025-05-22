@@ -59,12 +59,6 @@ public class Interseccion {
         return semaforo;
     }
 
-    public void aumentarProcesos() {
-        if (semaforo != null) {
-            this.semaforo.aumentarContador();
-        }
-    }
-
     public int getComplejidad() {
         if (cola != null) {
             return cola.getNumProcesos();

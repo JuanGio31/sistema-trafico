@@ -80,7 +80,6 @@ public class Simulacion {
         do {
             String path = Utilidad.getString(scanner, "Ingresar la ruta del archivo");
             vehiculosRegistrados = gestorArchivo.readCSV(path);
-//            vehiculosRegistrados = gestorArchivo.readCSV("/home/giovanic/Documents/Tareas/1S2025/EDD/Proyectos/sistema-trafico/proyecto-final/prueba.csv");
         } while (vehiculosRegistrados == -1);
         System.out.println("Se agregaron: " + vehiculosRegistrados + " vehiculos.");
     }

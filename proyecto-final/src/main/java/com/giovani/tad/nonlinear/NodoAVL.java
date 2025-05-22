@@ -1,13 +1,6 @@
 package com.giovani.tad.nonlinear;
 
 import com.giovani.Interseccion;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 public class NodoAVL {
     private Interseccion dato;
@@ -73,7 +66,6 @@ public class NodoAVL {
             texto += "\"" + dato.getId() + "\" -> \"" + hijoDerecho.dato.getId() + "\";\n";
             texto += hijoDerecho.textoGraphviz();
         }
-
         return texto;
     }
 }

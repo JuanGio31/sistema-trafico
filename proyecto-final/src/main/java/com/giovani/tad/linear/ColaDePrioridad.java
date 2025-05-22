@@ -77,12 +77,6 @@ public class ColaDePrioridad {
         return tam;
     }
 
-    public void printEstado() {
-        for (int i = 0; i < NUM_PRIORIDADES; i++) {
-            System.out.println("Prioridad " + i + ": " + colas[i].size + " elementos");
-        }
-    }
-
     public int getNumProcesos() {
         return procesos;
     }

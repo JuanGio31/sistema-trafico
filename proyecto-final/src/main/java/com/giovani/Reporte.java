@@ -55,10 +55,16 @@ public class Reporte {
         System.out.println("////////////////////////////////////////////////////////");
         System.out.println("-------------------- REPORTE CIUDAD --------------------");
         mostrarVehiculosOrdenados();
+        mostrarVehiculosEnDestino();
         mostrarTotalDeProcesos();
         mostrarArbol();
         mostrarEventos();
         System.out.println("////////////////////////////////////////////////////////\n");
+    }
+
+    private void mostrarVehiculosEnDestino() {
+        System.out.println("\n----------------- Vehiculos en destino --------------------");
+        ciudad.getVehiculosEnDestino().print();
     }
 
     private void mostrarTotalDeProcesos() {
